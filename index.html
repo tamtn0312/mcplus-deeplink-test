@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MC+ Deep Link Test</title>
+<style>
+  :root {
+    --bg: #f6f6f7; --card: #ffffff; --fg: #1d1d22; --muted: #6b6b75;
+    --accent: #d0021b; --line: #e2e2e6;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141417; --card: #1f1f24; --fg: #f1f1f4; --muted: #a0a0aa;
+            --accent: #ff3b4e; --line: #33333a; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 16px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+         padding: 24px max(16px, env(safe-area-inset-left)) 40px; }
+  main { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+  h1 { margin: 0; font-size: 24px; }
+  p { margin: 0; color: var(--muted); }
+  h2 { margin: 8px 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  a.btn { display: flex; align-items: center; justify-content: center; text-align: center;
+          min-height: 56px; padding: 10px; border-radius: 10px; text-decoration: none;
+          background: var(--card); color: var(--fg); border: 1px solid var(--line); font-weight: 600; }
+  a.btn.main { background: var(--accent); color: #fff; border-color: var(--accent); }
+  a.btn:active { opacity: .7; }
+  a.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>MC+ Deep Link Test</h1>
+  <p>Bấm một nút để mở ứng dụng MC+ tại màn hình tương ứng.</p>
+
+
+  <h2>Các tab chính</h2>
+  <div class="grid" id="tabs"></div>
+
+  <h2>Màn hình khác</h2>
+  <div class="grid" id="others"></div>
+</main>
+<script>
+  const PKG = 'vn.com.mitsubishimotorsvietnam2021.aftersale';
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  // Android: intent URL để Chrome mở app ổn định; iOS: custom scheme trực tiếp.
+  const link = (type) => isAndroid
+    ? `intent://open?type=${type}#Intent;scheme=mcplus;package=${PKG};end`
+    : `mcplus://open?type=${type}`;
+  const tabs = [
+    ['home', 'Trang chủ'], ['vehicle', 'Xe của tôi'], ['service', 'Dịch vụ'],
+    ['promotion', 'Ưu đãi'], ['information', 'Thông tin'], ['notifycenter', 'Thông báo'],
+  ];
+  const others = [
+    ['bookAppointment', 'Đặt lịch hẹn'], ['historyService', 'Lịch sử bảo dưỡng'],
+    ['myVoucher', 'Voucher của tôi'], ['maintenanceSimulator', 'Gói bảo dưỡng'],
+    ['tipManual', 'Mẹo sử dụng'], ['carFeatures', 'Tính năng xe'],
+  ];
+  const render = (id, items, cls) => {
+    document.getElementById(id).innerHTML = items
+      .map(([t, label]) => `<a class="btn ${cls}" href="${link(t)}">${label}</a>`).join('');
+  };
+  render('tabs', tabs, 'main');
+  render('others', others, '');
+</script>
+</body>
+</html>
